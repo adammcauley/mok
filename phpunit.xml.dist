@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit forceCoversAnnotation="true" colors="true" strict="true">
+    <testsuite name="Mok">
+        <directory suffix="Test.php">./Test</directory>
+    </testsuite>
+
+    <filter>
+        <whitelist addUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">./</directory>
+            <exclude>
+                <directory suffix=".php">./Test/</directory>
+            </exclude>
+        </whitelist>
+    </filter>
+</phpunit>
