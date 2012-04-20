@@ -30,7 +30,7 @@ class MokTest
      */
     protected function tearDown()
     {
-
+        $this->object = null;
     }
 
     /**
@@ -39,10 +39,17 @@ class MokTest
      */
     public function test___lock()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
+        $testParam = 5;
+        $testResult = 10;
+
+        $first = $this->object->foo($testParam, $testResult);
+
+        $this->assertEquals($this->object, $first);
+
+        $this->object->___lock();
+        $second = $this->object->foo($testParam);
+
+        $this->assertEquals($testResult, $second);
     }
 
     /**
@@ -51,10 +58,25 @@ class MokTest
      */
     public function test__set()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
+        $testPropertyName = 'fooMatilda';
+        $testValue = 'this is a test value';
+        $testValue2 = 'this is another test value';
+
+        $first = ($this->object->$testPropertyName = $testValue);
+        $this->assertEquals($this->object, $first, 'failed first');
+
+//        $second = $this->object->$testPropertyName;
+//        $this->assertEquals($testValue, $second, 'failed second');
+//
+//        $this->object->___lock();
+//
+//        $third = $this->object->$testPropertyName = $testValue2;
+//        $this->assertEquals($this->object, $third, 'failed third');
+//
+//        $forth = $this->object->$testPropertyName;
+//        $this->assertEquals($testValue2, $forth, 'failed forth');
+
+
     }
 
     /**

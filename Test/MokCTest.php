@@ -21,7 +21,7 @@ class MokCTest
      */
     protected function setUp()
     {
-        $this->object = new MokC;
+        $this->object = new MokC('inputA','inputB');
     }
 
     /**
