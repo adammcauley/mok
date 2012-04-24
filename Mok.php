@@ -115,4 +115,16 @@ class Mok
     {
         return print_r($this->_map, true);
     }
+
+    private static namething = 'Mokki';
+    public static function getMok()
+    {
+        // make up a name
+        // read this $file 
+        // preg replace 'class Mok' with "class $name"
+        // eval $file
+        // create new : $obj = new $name
+        // return $obj
+    }
+
 }
