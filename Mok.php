@@ -21,28 +21,9 @@ require_once 'MokC.php';
 class Mok
 {
     /**
-     * @var boolean $locked FALSE allows methods to be added to $map
-     */
-    private $_locked = false;
-
-    /**
      * @var array $map Hashmap containing function signatures and return values
      */
-    private $_map = array();
-
-    /**
-     * Lock object so that previously created methods can be executed
-     *
-     * @param boolean $locked TRUE (default) prevents further methods from
-     *                        being added to the hashmap
-     *
-     * @return Mok
-     */
-    public function ___lock($locked = true)
-    {
-        $this->_locked = (bool) $locked;
-        return $this;
-    }
+    private static $_map = array();
 
     /**
      * Magic setter used for creating mock properties
@@ -54,10 +35,7 @@ class Mok
      */
     public function __set($property, $returnValue)
     {
-        if (!$this->_locked) {
-            $this->_map[$property] = $returnValue;
-        }
-        return $this;
+        self::$_map[$property] = $returnValue;
     }
 
     /**
@@ -69,7 +47,7 @@ class Mok
      */
     public function __get($property)
     {
-        return $this->_map[$property];
+        return self::$_map[$property];
     }
 
     /**
@@ -84,25 +62,22 @@ class Mok
      */
     public function __call($methodName, $arguments)
     {
-        if ($this->_locked) {
-            $fp = "$methodName(" . implode(',', $arguments) . ")";
-            if (in_array($fp, array_keys($this->_map))) {
-                return $this->_map[$fp] ;
-            } else {
-                throw new Exception("Method {$methodName}() was not defined!") ;
-            }
+        $fp = "$methodName(" . implode(',', $arguments) . ")";
+        if (in_array($fp, array_keys(self::$_map))) {
+            return self::$_map[$fp] ;
         } else {
-
-            $returnValue = array_pop($arguments);
-
-            if ($returnValue instanceof MokC) {
-                // TODO handle expected access
-                $returnValue = $returnValue->getReturnValue();
-            }
-
-            $this->_map["$methodName(" . implode(',', $arguments) . ')'] = $returnValue;
-            return $this;
+            throw new Exception("Method {$methodName}() was not defined!") ;
         }
+    }
+
+    public static function __callStatic($methodName, $arguments)
+    {
+        $returnValue = array_pop($arguments);
+        if ($returnValue instanceof MokC) {
+            // TODO handle expected access
+            $returnValue = $returnValue->getReturnValue();
+        }
+        self::$_map["$methodName(" . implode(',', $arguments) . ')'] = $returnValue;
     }
 
     /**
@@ -113,18 +88,20 @@ class Mok
      */
     public function __toString()
     {
-        return print_r($this->_map, true);
+        return print_r(self::$_map, true);
     }
 
-    private static namething = 'Mokki';
+    // oh dear god what are you thinking?!
+    private static $namething = 'Mokki';
     public static function getMok()
     {
-        // make up a name
-        // read this $file 
-        // preg replace 'class Mok' with "class $name"
-        // eval $file
-        // create new : $obj = new $name
-        // return $obj
+        $namething = self::$namething = self::$namething . rand() ;
+        $file = file_get_contents('Mok.php', true);
+        $file = preg_replace('/class Mok/' , "class ".$namething , $file , 1 );
+        $file = preg_replace('/<\?php/' , '' , $file , 1 );
+        $str = $file . ' $o = new '.$namething.'(); return $o;' ;
+        $obj = eval($str);
+        return $obj;
     }
 
 }
