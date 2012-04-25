@@ -22,12 +22,6 @@ try {
     // Create method 'foo', expecting one parameter '5', returning 10
     $m::mInst('foo', 5, 10); // last parameter is always return value
 
-    // Create public property 'bar' with value 'baz'
-    $m->bar = 'baz';
-
-    // Create method 'foo', expecting one parameter '5', returning 10
-    $m::mInst('foo', 5, 10); // last parameter is always return value
-
     // Create static method 'sound', expecting one parameter 'cow' returning 'moo'
     $m::mStat('sound', 'cow', 'moo');
 
