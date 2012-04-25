@@ -3,37 +3,42 @@
 ```php
 <?php
 
-$m = new Mok;
+$m = Mok::getMok();
 
 // Create public property 'bar' with value 'baz'
 $m->bar = 'baz';
 
 // Create method 'foo', expecting one parameter '5', returning 10
-$m->foo(5, 10); // last parameter is always return value
+$m::mInst('foo', 5, 10); // last parameter is always return value
 
-$mo = new Mok;
+// Create public property 'bar' with value 'baz'
+$m->bar = 'baz';
+
+// Create method 'foo', expecting one parameter '5', returning 10
+$m::mInst('foo', 5, 10); // last parameter is always return value
+
+// Create static method 'sound', expecting one parameter 'cow' returning 'moo'
+$m::mStat('sound', 'cow', 'moo');
+
+// Create another mok with a parameter and a static method
+$mo = Mok::getMok();
 $mo->duck = 'quack';
-$mo->___lock(); // ___lock() prevents further methods from being created, allowing for execution instead
+$mo::mStat('sound', 'cow', 'quack quack');
 
+// lets add these two together !
 $m->mo = $mo;
-$m->___lock();
+
+// I wonder what happens when....
 
 print $m->foo(5) . PHP_EOL;   // prints 10
 print $m->bar . PHP_EOL;      // prints baz
 print $m->mo->duck . PHP_EOL; // prints quack
+print $m::sound('cow') . PHP_EOL; // prints 'moo'
+$x = $m->mo;
+print $x::sound('cow') . PHP_EOL; // prints 'quack quack'
+
+
 ```
 
-## Another example
+see example.php
 
-```php
-<?php
-
-$m = new Mok;
-$m->foo(1,2)
-  ->foo(2,4);
-
-$m->___lock();
-                                                                                                                                       
-echo $m->foo(1) . PHP_EOL; // 2
-echo $m->foo(2) . PHP_EOL; // 4
-```
